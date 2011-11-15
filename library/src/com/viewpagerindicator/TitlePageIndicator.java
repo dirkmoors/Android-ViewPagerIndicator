@@ -281,16 +281,12 @@ public class TitlePageIndicator extends View implements PageIndicator {
 
         //Calculate views bounds
         ArrayList<RectF> bounds = calculateAllBounds(mPaintText);
-
-        /*
-         * Fixing IndexOutOfBoundsException that occurs on < Android 2.2
-         */
-        if(bounds.size() >= 0)
-        {
-        	Log.w(TAG, "Prevented IndexOutOfBoundsException that occurs on < Android 2.2");
-        	return;
-        }   
         
+        if(bounds.size() <= 0)
+        {
+        	return;
+        }
+
         final int count = mViewPager.getAdapter().getCount();
         final int countMinusOne = count - 1;
         final float halfWidth = getWidth() / 2f;
