@@ -29,6 +29,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -52,6 +53,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
      * that 10% between the center and an edge.
      */
     private static final float BOLD_FADE_PERCENTAGE = 0.05f;
+
+	private static final String TAG = "TitlePageIndicator";
 
     public enum IndicatorStyle {
         None(0), Triangle(1), Underline(2);
@@ -279,6 +282,15 @@ public class TitlePageIndicator extends View implements PageIndicator {
         //Calculate views bounds
         ArrayList<RectF> bounds = calculateAllBounds(mPaintText);
 
+        /*
+         * Fixing IndexOutOfBoundsException that occurs on < Android 2.2
+         */
+        if(bounds.size() >= 0)
+        {
+        	Log.w(TAG, "Prevented IndexOutOfBoundsException that occurs on < Android 2.2");
+        	return;
+        }   
+        
         final int count = mViewPager.getAdapter().getCount();
         final int countMinusOne = count - 1;
         final float halfWidth = getWidth() / 2f;
@@ -300,7 +312,8 @@ public class TitlePageIndicator extends View implements PageIndicator {
         final boolean currentSelected = (offsetPercent <= SELECTION_FADE_PERCENTAGE);
         final boolean currentBold = (offsetPercent <= BOLD_FADE_PERCENTAGE);
         final float selectedPercent = (SELECTION_FADE_PERCENTAGE - offsetPercent) / SELECTION_FADE_PERCENTAGE;
-
+      
+        
         //Verify if the current view must be clipped to the screen
         RectF curPageBound = bounds.get(mCurrentPage);
         float curPageWidth = curPageBound.right - curPageBound.left;
