@@ -405,8 +405,24 @@ public class TitlePageIndicator extends View implements PageIndicator {
                 if (!currentSelected) {
                     break;
                 }
-
-                RectF underlineBounds = bounds.get(page);
+                
+                RectF underlineBounds = null;                              
+                while(underlineBounds == null)
+                {
+                	if(page < 0)
+                	{
+                		return;
+                	}
+                	else if(page >= 0 && page < bounds.size())
+                	{
+                		underlineBounds = bounds.get(page);                		
+                	}
+                	else
+                	{
+                		page--;
+                	}
+                }
+                
                 mPath = new Path();
                 mPath.moveTo(underlineBounds.left  - mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
                 mPath.lineTo(underlineBounds.right + mFooterIndicatorUnderlinePadding, height - mFooterLineHeight);
